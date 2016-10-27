@@ -159,8 +159,6 @@ package com.virandi.sudoku.core
 		{
 			var column:int = 0;
 			
-			var row:int = 0;
-			
 			var i:int = 0;
 			
 			var j:int = 0;
@@ -171,112 +169,105 @@ package com.virandi.sudoku.core
 			
 			var m:int = 0;
 			
+			var row:int = 0;
+			
 			var x:int = 0;
 			
 			var y:int = 0;
 			
-			if (cell == null)
+			if ((cell == null) || (cell.value == value))
 			{
 			}
 			else
 			{
-				if (cell.invalid [value] == 0)
+				if ((cell.lock == false) && (cell.invalid [value] == 0))
 				{
-					if (cell.lock == false)
+					cell.value = (cell.value ^ value);
+					
+					value = (value ^ cell.value);
+					
+					cell.value = (cell.value ^ value);
+					
+					column = (cell.index % this.size);
+					
+					row = (cell.index / this.size);
+					
+					x = (column / this.sizeSqrt);
+					
+					y = (row / this.sizeSqrt);
+					
+					for (i = 0; i != this.size; ++i)
 					{
-						if (cell.value == value)
+						j = (i / this.sizeSqrt);
+						
+						k = ((i % this.sizeSqrt) + (j * this.size) + (x * this.sizeSqrt) + ((y * this.sizeSqrt) * this.size));
+						
+						if (cell.value == 0)
 						{
 						}
 						else
 						{
-							cell.value = (cell.value ^ value);
+							++this.cell [k].invalid [cell.value];
+						}
+						
+						if (value == 0)
+						{
+						}
+						else
+						{
+							--this.cell [k].invalid [value];
+						}
+						
+						if (j == x)
+						{
+						}
+						else
+						{
+							l = (i + (row * this.size));
 							
-							value = (value ^ cell.value);
-							
-							cell.value = (cell.value ^ value);
-							
-							column = (cell.index % this.size);
-							
-							row = (cell.index / this.size);
-							
-							x = (column / this.sizeSqrt);
-							
-							y = (row / this.sizeSqrt);
-							
-							for (i = 0; i != this.size; ++i)
+							if (cell.value == 0)
 							{
-								j = (i / this.sizeSqrt);
-								
-								k = ((i % this.sizeSqrt) + (j * this.size) + (x * this.sizeSqrt) + ((y * this.sizeSqrt) * this.size));
-								
-								if (cell.value == 0)
-								{
-								}
-								else
-								{
-									++this.cell [k].invalid [cell.value];
-								}
-								
-								if (value == 0)
-								{
-								}
-								else
-								{
-									--this.cell [k].invalid [value];
-								}
-								
-								if (j == x)
-								{
-								}
-								else
-								{
-									l = (i + (row * this.size));
-									
-									if (cell.value == 0)
-									{
-									}
-									else
-									{
-										++this.cell [l].invalid [cell.value];
-									}
-									
-									if (value == 0)
-									{
-									}
-									else
-									{
-										--this.cell [l].invalid [value];
-									}
-								}
-								
-								if (j == y)
-								{
-								}
-								else
-								{
-									m = (column + (i * this.size));
-									
-									if (cell.value == 0)
-									{
-									}
-									else
-									{
-										++this.cell [m].invalid [cell.value];
-									}
-									
-									if (value == 0)
-									{
-									}
-									else
-									{
-										--this.cell [m].invalid [value];
-									}
-								}
+							}
+							else
+							{
+								++this.cell [l].invalid [cell.value];
 							}
 							
-							this.data [cell.index] = cell.value;
+							if (value == 0)
+							{
+							}
+							else
+							{
+								--this.cell [l].invalid [value];
+							}
+						}
+						
+						if (j == y)
+						{
+						}
+						else
+						{
+							m = (column + (i * this.size));
+							
+							if (cell.value == 0)
+							{
+							}
+							else
+							{
+								++this.cell [m].invalid [cell.value];
+							}
+							
+							if (value == 0)
+							{
+							}
+							else
+							{
+								--this.cell [m].invalid [value];
+							}
 						}
 					}
+					
+					this.data [cell.index] = cell.value;
 				}
 			}
 			
